@@ -1,27 +1,20 @@
 package ru.javawebinar.topjava.web;
 
-import ru.javawebinar.topjava.model.Meal;
-import ru.javawebinar.topjava.model.MealTo;
-import ru.javawebinar.topjava.util.MealsUtil;
+import ru.javawebinar.topjava.util.UserMealUtils;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
-import java.time.LocalTime;
-import java.util.List;
 
 public class MealServlet extends HttpServlet {
-
+    //public static final LoggerWrapper LOG = LoggerWrapper.get(MealServlet.class);
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        List<Meal> meals = MealsUtil.getMeals();
-        List<MealTo> mealsTo = MealsUtil.filteredByStreams(meals, LocalTime.MIN, LocalTime.MAX, MealsUtil.CALORIES_PER_DATE);
-        req.setAttribute("mealsTo", mealsTo);
 
-        req.getRequestDispatcher("/meal.jsp").forward(req, resp);
-
-        super.doGet(req, resp);
+        req.setAttribute("mealList",
+                UserMealUtils.getWithExceeded(UserMealUtils.MEAL_LIST, 2000));
+        req.getRequestDispatcher("/mealList.jsp").forward(req, resp);
     }
 }
